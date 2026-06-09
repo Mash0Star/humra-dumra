@@ -1,7 +1,7 @@
 g# humra-dumra
 A silly umu-run launcher.
 
-![logo](src/logo.png)
+![logo](screenshot.png)
 
 ## Requirements
 ``umu-run`` (Arch Linux package:``umu-launcher``)
