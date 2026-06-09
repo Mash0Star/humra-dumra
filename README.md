@@ -8,7 +8,7 @@ A silly umu-run launcher.
 
 ## Config
 Default file location = ``~/.config/humra-dumra/config.toml``
-Default variables =``proton_path = "~/proton" prefix_path = "~/.pfx"``
+Default variables = ``proton_path = "~/proton" prefix_path = "~/.pfx"``
 
 ## Credits
 UMU = https://github.com/Open-Wine-Components/umu-launcher
