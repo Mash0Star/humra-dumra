@@ -1,6 +1,6 @@
 [package]
 name = "humra-dumra"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 
 [dependencies]
@@ -24,6 +24,6 @@ icon = [
 "assets/icons/icon-256.png",
 "assets/icons/icon-512.png"
 ]
-version = "0.2.0"
+version = "0.3.0"
 category = "Game"
 long_description = "A silly umu-run launcher."
