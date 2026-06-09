@@ -1,0 +1,180 @@
+import { Button, LineEdit, VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+    title: "Humra-Dumra";
+    min-width: 640px;
+    min-height: 640px;
+    background: #1e1e2e;
+
+    callback browse-exe-clicked();
+    callback browse-proton-clicked();
+    callback browse-prefix-clicked();
+    callback enter-dashboard-clicked(string);
+
+    in-out property <string> game-path: "";
+    in-out property <string> proton-path: "";
+    in-out property <string> prefix-path: "";
+
+    VerticalBox {
+        padding: 32px;
+        spacing: 25px;
+        alignment: center;
+
+        Text {
+            text: "humra-dumra";
+            font-size: 32px;
+            font-weight: 700;
+            color: #cdd6f4;
+            horizontal-alignment: center;
+        }
+
+            // Spin-To-Win
+            HorizontalLayout {
+                alignment: center;
+                Rectangle {
+                    height: 256px;
+                    width: 256px;
+                    Image {
+                        source: @image-url("logo.png");
+                        width: 256px;
+                        height: 256px;
+                        transform-rotation: 360deg * (animation-tick() / 3000ms);
+                    }
+                }
+            }
+
+        // Text Marquee
+        Rectangle {
+            height: 45px;
+            width: 100%;
+            clip: true;
+            Text {
+                text: "...hickle pickle sickle...";
+                font-size: 32px;
+                color: #a6adc8;
+                y: 0;
+                property <float> factor: (animation-tick() / 1ms) / 5000;
+                property <float> total-distance: (parent.width + self.width) / 1px;
+                x: parent.width - (factor * total-distance - floor(factor) * total-distance) * 1px;
+            }
+        }
+
+        // Executable Picker
+        HorizontalLayout {
+            spacing: 32px;
+
+            Text {
+                text: "Executable:";
+                width: 80px;
+                color: #cdd6f4;
+                vertical-alignment: center;
+                font-size: 16px;
+            }
+
+            LineEdit {
+                text: root.game-path;
+                placeholder-text: "Select path of exe...";
+                edited(val) => { root.game-path = val; }
+            }
+
+            Button {
+                text: "Browse...";
+                clicked => { root.browse-exe-clicked(); }
+            }
+        }
+
+        // Proton Path Setter
+        HorizontalLayout {
+            spacing: 32px;
+
+            Text {
+                text: "Proton:";
+                width: 80px;
+                color: #cdd6f4;
+                vertical-alignment: center;
+                font-size: 16px;
+            }
+
+            LineEdit {
+                text: root.proton-path;
+                placeholder-text: "Select path of the Proton directory...";
+                edited(val) => { root.proton-path = val; }
+            }
+
+            Button {
+                text: "Browse...";
+                clicked => { root.browse-proton-clicked(); }
+            }
+        }
+        // Prefix Path Setter
+        HorizontalLayout {
+            spacing: 32px;
+
+            Text {
+                text: "Prefix:";
+                width: 80px;
+                color: #cdd6f4;
+                vertical-alignment: center;
+                font-size: 16px;
+            }
+
+            LineEdit {
+                text: root.prefix-path;
+                placeholder-text: "Select path of the Prefix directory...";
+                edited(val) => { root.prefix-path = val; }
+            }
+
+            Button {
+                text: "Browse...";
+                clicked => { root.browse-prefix-clicked(); }
+            }
+        }
+
+        // Bouncey Button
+        HorizontalLayout {
+            alignment: center;
+
+            Rectangle {
+                height: 32px;
+                width: 128px;
+
+                property <float> scale-x: 1.0;
+                property <float> scale-y: 1.0;
+
+                transform-scale-x: self.scale-x;
+                transform-scale-y: self.scale-y;
+
+                states [
+                    pressed when touch-area.pressed : {
+                        scale-x: 1.18;
+                        scale-y: 0.72;
+                    }
+                    hovered when touch-area.has-hover : {
+                        scale-x: 0.94;
+                        scale-y: 1.12;
+                    }
+                ]
+
+                animate scale-x, scale-y {
+                    duration: 200ms;
+                    easing: ease-out-back;
+                }
+
+                Button {
+                    text: "✰";
+                    primary: true;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                touch-area := TouchArea {
+                    width: 100%;
+                    height: 100%;
+                    clicked => {
+                        root.enter-dashboard-clicked(root.game-path);
+                    }
+                }
+            }
+        }
+    }
+}

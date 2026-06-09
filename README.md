@@ -1,2 +1,2 @@
 # humra-dumra
-A silly unu-run launcher.
+A silly umu-run launcher.

@@ -1,0 +1,29 @@
+[package]
+name = "humra-dumra"
+version = "0.2.0"
+edition = "2024"
+
+[dependencies]
+confy = "2.0.0"
+rfd = "0.17.2"
+serde = { version = "1.0.228", features = ["derive"] }
+slint = "1.16.1"
+rodio = "0.19"
+image = "0.25.10"
+[build-dependencies]
+slint-build = "1.16.1"
+image = "0.25.10"
+
+[package.metadata.bundle]
+name = "Humra-Dumra"
+identifier = "io.github.mash0star.humra-dumra"
+icon = [
+"assets/icons/icon-32.png",
+"assets/icons/icon-64.png",
+"assets/icons/icon-128.png",
+"assets/icons/icon-256.png",
+"assets/icons/icon-512.png"
+]
+version = "0.2.0"
+category = "Game"
+long_description = "A silly umu-run launcher."
