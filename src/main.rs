@@ -13,6 +13,7 @@ const CLICK_SOUND_BYTES: &[u8] = include_bytes!("sound.wav");
 struct LauncherConfig {
     proton_path: String,
     prefix_path: String,
+    envvar_raw: String,
 }
 
 impl Default for LauncherConfig {
@@ -20,6 +21,7 @@ impl Default for LauncherConfig {
         Self {
             proton_path: "~/proton".to_string(),
             prefix_path: "~/.pfx".to_string(),
+            envvar_raw: "".to_string(),
         }
     }
 }
@@ -30,6 +32,7 @@ fn main() -> Result<(), slint::PlatformError> {
     let initial_config: LauncherConfig = confy::load("humra-dumra", "config").unwrap_or_default();
     main_window.set_proton_path(initial_config.proton_path.as_str().into());
     main_window.set_prefix_path(initial_config.prefix_path.as_str().into());
+    main_window.set_envvar_input(initial_config.envvar_raw.as_str().into());
 
     let (_stream, stream_handle) = OutputStream::try_default()
     .expect("Failed to open default audio output device");
@@ -80,7 +83,6 @@ fn main() -> Result<(), slint::PlatformError> {
         }
     });
 
-
     main_window.on_browse_prefix_clicked({
         let window_weak = window_weak.clone();
         move || {
@@ -105,9 +107,9 @@ fn main() -> Result<(), slint::PlatformError> {
         }
     });
 
-
     let audio_handle = stream_handle.clone();
-    main_window.on_enter_dashboard_clicked(move |game_path| {
+
+    main_window.on_enter_dashboard_clicked(move |game_path, envvar_raw| {
         println!("Launch button triggered. Reading configurations from file...");
 
         let cursor = Cursor::new(CLICK_SOUND_BYTES);
@@ -122,6 +124,16 @@ fn main() -> Result<(), slint::PlatformError> {
         let target_exe = game_path.to_string();
         let proton_path = config.proton_path;
         let prefix_path = config.prefix_path;
+        let envvar_str = envvar_raw.to_string();
+
+        if let Ok(mut config) = confy::load::<LauncherConfig>("humra-dumra", "config") {
+            config.envvar_raw = envvar_str.clone();
+            if let Err(e) = confy::store("humra-dumra", "config", &config) {
+                eprintln!("ERROR: Failed to save envvar_raw to configuration file: {}", e);
+            } else {
+                println!("NOTICE: The envvar_raw has been successfully written to disk.");
+            }
+        }
 
         thread::spawn(move || {
             if proton_path.contains("~/proton") {
@@ -134,6 +146,19 @@ fn main() -> Result<(), slint::PlatformError> {
 
             if !prefix_path.is_empty() {
                 cmd.env("WINEPREFIX", &prefix_path);
+            }
+
+            if !envvar_str.trim().is_empty() {
+                for var in envvar_str.split_whitespace() {
+                    if let Some((key, value)) = var.split_once('=') {
+                        cmd.env(key, value);
+                        println!("Loaded custom environment variable: {}={}", key, value);
+
+                    } else {
+                        eprintln!("WARNING: Invalid environment variable format: '{}'. Expected KEY=VALUE", var);
+                    }
+
+                }
             }
 
             println!("Launching: umu-run {}", target_exe);

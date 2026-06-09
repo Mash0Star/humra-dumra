@@ -3,6 +3,10 @@ A silly umu-run launcher.
 
 ![logo](screenshot.png)
 
+## Disclaimer
+I used google search during this project for looking up stuff about rust and slint so idk what the liscense would be. :c
+
+
 ## Requirements
 ``umu-run`` (Arch Linux package:``umu-launcher``)
 

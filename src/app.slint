@@ -9,11 +9,12 @@ export component MainWindow inherits Window {
     callback browse-exe-clicked();
     callback browse-proton-clicked();
     callback browse-prefix-clicked();
-    callback enter-dashboard-clicked(string);
+    callback enter-dashboard-clicked(string, string);
 
     in-out property <string> game-path: "";
     in-out property <string> proton-path: "";
     in-out property <string> prefix-path: "";
+    in-out property <string> envvar-input: "";
 
     VerticalBox {
         padding: 32px;
@@ -28,20 +29,20 @@ export component MainWindow inherits Window {
             horizontal-alignment: center;
         }
 
-            // Spin-To-Win
-            HorizontalLayout {
-                alignment: center;
-                Rectangle {
-                    height: 256px;
+        // Spin-To-Win
+        HorizontalLayout {
+            alignment: center;
+            Rectangle {
+                height: 256px;
+                width: 256px;
+                Image {
+                    source: @image-url("logo.png");
                     width: 256px;
-                    Image {
-                        source: @image-url("logo.png");
-                        width: 256px;
-                        height: 256px;
-                        transform-rotation: 360deg * (animation-tick() / 3000ms);
-                    }
+                    height: 256px;
+                    transform-rotation: 360deg * (animation-tick() / 3000ms);
                 }
             }
+        }
 
         // Text Marquee
         Rectangle {
@@ -106,6 +107,7 @@ export component MainWindow inherits Window {
                 clicked => { root.browse-proton-clicked(); }
             }
         }
+
         // Prefix Path Setter
         HorizontalLayout {
             spacing: 32px;
@@ -127,6 +129,24 @@ export component MainWindow inherits Window {
             Button {
                 text: "Browse...";
                 clicked => { root.browse-prefix-clicked(); }
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 32px;
+
+            Text {
+                text: "Variables:";
+                width: 80px;
+                color: #cdd6f4;
+                vertical-alignment: center;
+                font-size: 16px;
+            }
+
+            LineEdit {
+                text: root.envvar-input;
+                placeholder-text: "Optional! Examples: PROTON_ENABLE_HDR=1 MANGOHUD=1";
+                edited(val) => { root.envvar-input = val; }
             }
         }
 
@@ -171,7 +191,7 @@ export component MainWindow inherits Window {
                     width: 100%;
                     height: 100%;
                     clicked => {
-                        root.enter-dashboard-clicked(root.game-path);
+                        root.enter-dashboard-clicked(root.game-path, root.envvar-input);
                     }
                 }
             }
