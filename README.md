@@ -1,4 +1,4 @@
-g# humra-dumra
+# humra-dumra
 A silly umu-run launcher.
 
 ![logo](screenshot.png)
